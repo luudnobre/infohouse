@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flow Create | Criar fluxos que otimizam processos das empresas</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-soft: #0d1a2d;
+      --card: rgba(15, 27, 47, 0.78);
+      --card-strong: #101f37;
+      --line: rgba(120, 152, 214, 0.18);
+      --text: #eef4ff;
+      --muted: #a7b6d5;
+      --primary: #6ea8fe;
+      --primary-2: #65f0ff;
+      --accent: #98ffcb;
+      --danger: #ff8f8f;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      --shadow-soft: 0 12px 34px rgba(0, 0, 0, 0.24);
+      --radius: 24px;
+      --radius-sm: 16px;
+      --max: 1220px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(101, 240, 255, 0.10), transparent 18%),
+        radial-gradient(circle at 85% 15%, rgba(110, 168, 254, 0.16), transparent 22%),
+        radial-gradient(circle at 50% 100%, rgba(152, 255, 203, 0.06), transparent 22%),
+        linear-gradient(180deg, #050b15 0%, #07111f 42%, #081220 100%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    button,
+    a,
+    input,
+    textarea {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .container {
+      width: min(100% - 32px, var(--max));
+      margin-inline: auto;
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.10;
+      pointer-events: none;
+      mix-blend-mode: soft-light;
+      z-index: 1;
+    }
+
+    .grid-glow {
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 100px 100px;
+      mask-image: radial-gradient(circle at center, black 34%, transparent 78%);
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(18px);
+      background: rgba(4, 11, 22, 0.62);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(110,168,254,0.22), rgba(101,240,255,0.14));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+
+    .brand small {
+      display: block;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+
+    .nav-links a {
+      transition: color 0.25s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active-link {
+      color: var(--text);
+    }
+
+    .btn, button {
+      cursor: pointer;
+      border: 0;
+      font: inherit;
+      transition: 0.25s ease;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px;
+      border-radius: 16px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #06111f;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.06);
+      transform: translateY(-2px);
+    }
+
+    .btn-soft {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+      box-shadow: none;
+    }
+
+    .btn-soft:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    section {
+      position: relative;
+      z-index: 2;
+      scroll-margin-top: 92px;
+    }
+
+    .hero {
+      padding: 78px 0 44px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(17, 32, 56, 0.78), rgba(10, 19, 35, 0.84));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-card {
+      padding: 34px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      color: var(--primary-2);
+      background: rgba(101, 240, 255, 0.08);
+      border: 1px solid rgba(101, 240, 255, 0.14);
+      font-size: 0.92rem;
+      margin-bottom: 20px;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+
+    h1 {
+      font-size: clamp(2.6rem, 5vw, 4.8rem);
+      margin-bottom: 18px;
+      max-width: 11ch;
+    }
+
+    .hero p.lead {
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1.8;
+      max-width: 62ch;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 30px 0 28px;
+    }
+
+    .quick-proof {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 22px;
+    }
+
+    .proof-pill {
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .mini-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .mini-stat {
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .mini-stat:hover,
+    .card:hover,
+    .kpi:hover,
+    .timeline-item:hover,
+    .outcome-item:hover,
+    .signal:hover {
+      transform: translateY(-3px);
+      border-color: rgba(101,240,255,0.22);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 1.35rem;
+      margin-bottom: 8px;
+    }
+
+    .mini-stat span {
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.45;
+    }
+
+    .hero-visual {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100%;
+    }
+
+    .flow-shell {
+      width: 100%;
+      min-height: 520px;
+      border-radius: 28px;
+      position: relative;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.03), transparent),
+        radial-gradient(circle at 50% 20%, rgba(110,168,254,0.10), transparent 40%),
+        #081221;
+      border: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+      padding: 24px;
+    }
+
+    .flow-shell::before,
+    .flow-shell::after {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.24;
+    }
+
+    .flow-shell::before {
+      background: var(--primary);
+      top: -120px;
+      right: -100px;
+    }
+
+    .flow-shell::after {
+      background: var(--primary-2);
+      left: -120px;
+      bottom: -140px;
+    }
+
+    .flow-title {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+
+    .flow-title h3 {
+      font-size: 1.2rem;
+    }
+
+    .flow-title p {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .flow-stage-wrap {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 16px;
+    }
+
+    .flow-stage {
+      display: grid;
+      grid-template-columns: 58px 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(9, 19, 35, 0.72);
+      border: 1px solid rgba(255,255,255,0.08);
+      opacity: 0.55;
+      transform: translateX(18px) scale(0.98);
+      transition: 0.4s ease;
+    }
+
+    .flow-stage.active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      border-color: rgba(101, 240, 255, 0.4);
+      box-shadow: 0 0 0 1px rgba(101, 240, 255, 0.08), 0 20px 40px rgba(0,0,0,0.18);
+    }
+
+    .flow-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(110,168,254,0.2), rgba(101,240,255,0.18));
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    .flow-stage h4 {
+      font-size: 1.02rem;
+      margin-bottom: 6px;
+    }
+
+    .flow-stage p {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.94rem;
+    }
+
+    .flow-tag {
+      white-space: nowrap;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.9rem, 3vw, 3.1rem);
+      max-width: 12ch;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      max-width: 60ch;
+      line-height: 1.7;
+    }
+
+    .cards-3, .cards-4, .cards-2 {
+      display: grid;
+      gap: 18px;
+    }
+
+    .cards-3 { grid-template-columns: repeat(3, 1fr); }
+    .cards-4 { grid-template-columns: repeat(4, 1fr); }
+    .cards-2 { grid-template-columns: repeat(2, 1fr); }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      line-height: 1.72;
+    }
+
+    .card ul {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .card ul li::before {
+      content: "•";
+      color: var(--primary-2);
+      margin-right: 8px;
+    }
+
+    .section-space {
+      padding: 38px 0;
+    }
+
+    .signals {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .signal {
+      padding: 22px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .signal .signal-label {
+      display: inline-block;
+      font-size: 0.85rem;
+      color: var(--primary-2);
+      margin-bottom: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(101,240,255,0.08);
+      border: 1px solid rgba(101,240,255,0.14);
+    }
+
+    .signal h3 {
+      font-size: 1.08rem;
+      margin-bottom: 10px;
+    }
+
+    .signal p {
+      color: var(--muted);
+      line-height: 1.68;
+    }
+
+    .copy-layers {
+      display: grid;
+      gap: 14px;
+    }
+
+    .copy-step {
+      position: relative;
+      padding: 24px 24px 24px 74px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .copy-step .n {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: #06111f;
+    }
+
+    .quote-box {
+      padding: 28px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(101,240,255,0.08), rgba(110,168,254,0.08));
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-top: 18px;
+    }
+
+    .quote-box strong {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .kpi {
+      padding: 22px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .kpi small {
+      color: var(--muted);
+      display: block;
+      margin-bottom: 14px;
+    }
+
+    .kpi strong {
+      display: block;
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .kpi .bar {
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .kpi .bar span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--primary), var(--primary-2));
+      width: 0;
+      transition: 1.2s ease;
+    }
+
+    .segment-board {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .funnel {
+      display: grid;
+      gap: 12px;
+      align-content: center;
+      padding: 24px;
+      min-height: 420px;
+    }
+
+    .funnel-step {
+      margin-inline: auto;
+      text-align: center;
+      padding: 16px 20px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-weight: 700;
+      color: var(--text);
+      transition: 0.3s ease;
+    }
+
+    .funnel-step span {
+      display: block;
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 0.93rem;
+      margin-top: 6px;
+    }
+
+    .funnel-step:nth-child(1) { width: 100%; }
+    .funnel-step:nth-child(2) { width: 86%; }
+    .funnel-step:nth-child(3) { width: 72%; }
+    .funnel-step:nth-child(4) { width: 58%; }
+    .funnel-step:nth-child(5) { width: 44%; }
+
+    .funnel-arrow {
+      text-align: center;
+      color: var(--primary-2);
+      font-size: 1.25rem;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .tab-btn {
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .tab-btn.active,
+    .tab-btn:hover {
+      color: var(--text);
+      background: rgba(101,240,255,0.10);
+      border-color: rgba(101,240,255,0.25);
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fade 0.4s ease;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .timeline {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 18px;
+      padding: 20px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .timeline-item strong {
+      color: var(--primary-2);
+      font-size: 1.05rem;
+    }
+
+    .timeline-item p {
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.7;
+    }
+
+    .outcomes {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .outcome-item {
+      padding: 22px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .outcome-item strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 1.02rem;
+    }
+
+    .outcome-item p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .cta {
+      padding: 40px;
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(110,168,254,0.16), rgba(101,240,255,0.10)),
+        rgba(14, 23, 40, 0.9);
+      border: 1px solid rgba(255,255,255,0.09);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .cta h2 {
+      font-size: clamp(2rem, 3vw, 3.3rem);
+      margin-bottom: 14px;
+      max-width: 12ch;
+    }
+
+    .cta p {
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 58ch;
+    }
+
+    .cta-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 22px;
+      padding: 22px;
+    }
+
+    .cta-box ul {
+      list-style: none;
+      display: grid;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .cta-box li {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .cta-box li::before {
+      content: "✓";
+      color: var(--accent);
+      margin-right: 10px;
+      font-weight: 800;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    footer {
+      padding: 36px 0 60px;
+      color: var(--muted);
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 24px;
+      margin-top: 40px;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: 0.7s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .menu-btn {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .skip-link {
+      position: absolute;
+      left: 12px;
+      top: -50px;
+      background: white;
+      color: #081220;
+      padding: 10px 14px;
+      border-radius: 10px;
+      z-index: 100;
+      transition: top 0.2s ease;
+    }
+
+    .skip-link:focus {
+      top: 12px;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--primary-2);
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 1040px) {
+      .hero-grid,
+      .segment-board,
+      .cta,
+      .cards-3,
+      .cards-4,
+      .cards-2,
+      .kpi-grid,
+      .signals {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero-grid,
+      .segment-board,
+      .cta {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-shell {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav-links {
+        position: absolute;
+        left: 16px;
+        right: 16px;
+        top: calc(100% + 10px);
+        display: none;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+        border-radius: 18px;
+        background: rgba(6, 11, 20, 0.96);
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .menu-btn {
+        display: inline-grid;
+        place-items: center;
+      }
+
+      .hero {
+        padding-top: 42px;
+      }
+
+      .hero-card,
+      .card,
+      .cta,
+      .cta-box,
+      .signal {
+        padding: 22px;
+      }
+
+      .mini-stats,
+      .cards-3,
+      .cards-4,
+      .cards-2,
+      .kpi-grid,
+      .signals {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .flow-stage {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-tag {
+        width: fit-content;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions,
+      .cta-actions {
+        flex-direction: column;
+      }
+
+      h1 {
+        max-width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+
+      .flow-stage {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#inicio">Pular para o conteúdo</a>
+  <div class="grid-glow"></div>
+  <div class="noise"></div>
+
+  <header>
+    <div class="container nav">
+      <a href="#inicio" class="brand">
+        <div class="brand-badge">FC</div>
+        <div>
+          Flow Create
+          <small>Criar fluxos que otimizam processos das empresas</small>
+        </div>
+      </a>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#visao">Visão</a>
+        <a href="#arquitetura">Arquitetura</a>
+        <a href="#copy">Comunicação</a>
+        <a href="#metricas">Métricas</a>
+        <a href="#plano">Plano 90 dias</a>
+        <a href="#contato">Proposta</a>
+      </nav>
+
+      <button class="menu-btn" id="menuBtn" aria-label="Abrir menu">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div class="panel hero-card reveal show">
+          <div class="eyebrow">Flow Create • agência estratégica para operações mais inteligentes</div>
+          <h1>Estratégia, automação e inteligência para transformar processos em crescimento</h1>
+          <p class="lead">
+            Na Flow Create, nossa visão não é apenas apresentar ferramentas.
+            É desenhar sistemas comerciais mais claros, elegantes e funcionais para empresas que precisam otimizar processos,
+            qualificar melhor seus contatos e converter com mais consistência. Transformamos operações dispersas em fluxos estratégicos com direção, inteligência e resultado.
+          </p>
+
+          <div class="quick-proof">
+            <div class="proof-pill">Estratégia comercial</div>
+            <div class="proof-pill">Fluxos automatizados</div>
+            <div class="proof-pill">Qualificação inteligente</div>
+            <div class="proof-pill">Conversão com recorrência</div>
+          </div>
+
+          <div class="hero-actions">
+            <a href="#contato" class="btn btn-primary">Ver proposta final</a>
+            <a href="#arquitetura" class="btn btn-secondary">Explorar o fluxo</a>
+          </div>
+
+          <div class="mini-stats">
+            <div class="mini-stat">
+              <strong>Estratégia</strong>
+              <span>Organização da jornada comercial com visão de marca, operação e crescimento.</span>
+            </div>
+            <div class="mini-stat">
+              <strong>Automação</strong>
+              <span>Fluxos pensados para reduzir ruído, acelerar resposta e ganhar escala com ordem.</span>
+            </div>
+            <div class="mini-stat">
+              <strong>Conversão</strong>
+              <span>Atendimento mais inteligente, segmentação melhor e estrutura para recorrência.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel hero-visual reveal">
+          <div class="flow-shell">
+            <div class="flow-title">
+              <div>
+                <h3>Fluxo operacional da máquina digital</h3>
+                <p>Uma arquitetura simples, escalável e orientada à conversão.</p>
+              </div>
+              <div class="flow-tag" id="flowStatus">Entrada ativa</div>
+            </div>
+
+            <div class="flow-stage-wrap" id="flowStages">
+              <div class="flow-stage active">
+                <div class="flow-icon">IG</div>
+                <div>
+                  <h4>Instagram</h4>
+                  <p>Atração inicial com conteúdo, comentários com intenção e direct como porta de entrada.</p>
+                </div>
+                <div class="flow-tag">Captação</div>
+              </div>
+
+              <div class="flow-stage">
+                <div class="flow-icon">MC</div>
+                <div>
+                  <h4>Manychat</h4>
+                  <p>Automatiza respostas, puxa conversa, inicia triagem e reduz atrito logo no primeiro contato.</p>
+                </div>
+                <div class="flow-tag">Primeiro contato</div>
+              </div>
+
+              <div class="flow-stage">
+                <div class="flow-icon">n8</div>
+                <div>
+                  <h4>n8n</h4>
+                  <p>Orquestra a lógica do funil, distribui dados, cria follow-ups e organiza tudo sem ruído.</p>
+                </div>
+                <div class="flow-tag">Automação</div>
+              </div>
+
+              <div class="flow-stage">
+                <div class="flow-icon">AI</div>
+                <div>
+                  <h4>OpenAI</h4>
+                  <p>Lê contexto, identifica intenção de compra, classifica o lead e sugere a abordagem ideal.</p>
+                </div>
+                <div class="flow-tag">Qualificação</div>
+              </div>
+
+              <div class="flow-stage">
+                <div class="flow-icon">WA</div>
+                <div>
+                  <h4>WhatsApp Business / Cloud API</h4>
+                  <p>Centraliza o atendimento humano, acelera resposta e concentra a energia do fechamento.</p>
+                </div>
+                <div class="flow-tag">Conversão</div>
+              </div>
+
+              <div class="flow-stage">
+                <div class="flow-icon">CRM</div>
+                <div>
+                  <h4>CRM: Notion, Airtable ou HubSpot</h4>
+                  <p>Segmenta os clientes por suprimentos, hardware, revenda e recorrência para relacionamento contínuo.</p>
+                </div>
+                <div class="flow-tag">Recorrência</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-space" id="visao">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">Visão estratégica Flow Create</div>
+            <h2>Mais do que presença digital: uma operação com direção</h2>
+          </div>
+          <p>
+            A Flow Create entra para estruturar a lógica do crescimento. Em vez de ações isoladas, a proposta organiza uma jornada comercial inteira:
+            atração, resposta, qualificação, atendimento, segmentação e recorrência. O foco não está em parecer moderno. Está em operar melhor, vender com mais inteligência e sustentar expansão com consistência.
+          </p>
+        </div>
+
+        <div class="cards-3">
+          <article class="card reveal">
+            <h3>1. Posicionamento que organiza a entrada</h3>
+            <p>
+              A comunicação deixa de ser apenas institucional e passa a trabalhar com intenção estratégica, atraindo o público certo e preparando o terreno para conversas mais qualificadas.
+            </p>
+          </article>
+
+          <article class="card reveal">
+            <h3>2. Fluxos que reduzem atrito operacional</h3>
+            <p>
+              A operação ganha velocidade e clareza. Menos improviso, menos retrabalho e mais controle sobre como cada lead entra, é respondido, classificado e conduzido.
+            </p>
+          </article>
+
+          <article class="card reveal">
+            <h3>3. Estrutura para crescimento previsível</h3>
+            <p>
+              Quando estratégia, automação e segmentação passam a conversar entre si, a empresa deixa de depender de esforços soltos e começa a construir um processo comercial mais previsível e sustentável.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-space" id="oportunidade">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">Oportunidade identificada</div>
+            <h2>Onde empresas perdem energia antes de vender</h2>
+          </div>
+          <p>
+            Em muitos negócios, o problema não é falta de demanda. É a ausência de uma estrutura que receba, organize, interprete e conduza essa demanda com clareza.
+            A Flow Create entra justamente nesse ponto: para transformar dispersão em fluxo e esforço solto em processo estratégico.
+          </p>
+        </div>
+
+        <div class="signals">
+          <article class="signal reveal">
+            <div class="signal-label">Atrito comercial</div>
+            <h3>Entradas sem organização</h3>
+            <p>Comentários, directs e atendimentos chegam, mas sem uma lógica clara de priorização, muitos contatos se perdem ou esfriam no caminho.</p>
+          </article>
+
+          <article class="signal reveal">
+            <div class="signal-label">Ruído operacional</div>
+            <h3>Resposta manual demais</h3>
+            <p>Quando tudo depende de ação humana desde o primeiro toque, a operação fica lenta, repetitiva e com baixa escalabilidade.</p>
+          </article>
+
+          <article class="signal reveal">
+            <div class="signal-label">Crescimento travado</div>
+            <h3>Falta de segmentação real</h3>
+            <p>Sem dados organizados e sem visão por perfil de cliente, fica difícil acompanhar recorrência, reativar oportunidades e vender com previsibilidade.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-space" id="arquitetura">
+      <div class="container segment-board">
+        <div class="card reveal">
+          <div class="section-head" style="margin-bottom:16px;">
+            <div>
+              <div class="eyebrow">Arquitetura de automação</div>
+              <h2 style="font-size: clamp(1.8rem, 3vw, 2.7rem); max-width: 14ch;">Fluxo pensado para captar, qualificar e converter</h2>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="instagram">Instagram</button>
+            <button class="tab-btn" data-tab="manychat">Manychat</button>
+            <button class="tab-btn" data-tab="n8n">n8n</button>
+            <button class="tab-btn" data-tab="openai">OpenAI</button>
+            <button class="tab-btn" data-tab="whatsapp">WhatsApp</button>
+            <button class="tab-btn" data-tab="crm">CRM</button>
+          </div>
+
+          <div class="tab-panel active" id="instagram">
+            <h3>Instagram como captação ativa</h3>
+            <p>
+              Aqui começa o movimento. Conteúdo estratégico, CTA nos posts, gatilhos nos comentários e directs criam o início da jornada.
+              Em vez de esperar o cliente chegar pronto, a comunicação puxa o primeiro sinal de intenção.
+            </p>
+          </div>
+
+          <div class="tab-panel" id="manychat">
+            <h3>Manychat como resposta imediata</h3>
+            <p>
+              Assim que o lead comenta ou chama no direct, o Manychat entra como ponte de velocidade: responde, inicia triagem,
+              coleta sinais iniciais e prepara a jornada para os próximos passos.
+            </p>
+          </div>
+
+          <div class="tab-panel" id="n8n">
+            <h3>n8n como cérebro operacional</h3>
+            <p>
+              O n8n conecta ferramentas, organiza dados, dispara ações, faz follow-up e sustenta a lógica do funil.
+              É o ponto onde o processo deixa de depender de memória manual e passa a rodar com consistência.
+            </p>
+          </div>
+
+          <div class="tab-panel" id="openai">
+            <h3>OpenAI como camada de inteligência</h3>
+            <p>
+              A IA interpreta mensagens, percebe intenção, classifica o perfil do lead e sugere abordagem.
+              Isso melhora qualidade do atendimento e evita que contatos quentes recebam respostas genéricas.
+            </p>
+          </div>
+
+          <div class="tab-panel" id="whatsapp">
+            <h3>WhatsApp como centro da conversão</h3>
+            <p>
+              O WhatsApp concentra a conversa onde a venda tende a acontecer com mais naturalidade.
+              A experiência fica mais humana, mais rápida e mais próxima do fechamento.
+            </p>
+          </div>
+
+          <div class="tab-panel" id="crm">
+            <h3>CRM como motor de organização e recorrência</h3>
+            <p>
+              Com leads e clientes segmentados por suprimentos, hardware, revenda e recorrência, o negócio ganha visão histórica,
+              reativação, relacionamento e oportunidades futuras mais previsíveis.
+            </p>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="funnel">
+            <div class="funnel-step">Instagram<span>Atrai atenção e intenção</span></div>
+            <div class="funnel-arrow">↓</div>
+            <div class="funnel-step">Automação<span>Responde e organiza a entrada</span></div>
+            <div class="funnel-arrow">↓</div>
+            <div class="funnel-step">IA<span>Entende e classifica o cliente</span></div>
+            <div class="funnel-arrow">↓</div>
+            <div class="funnel-step">WhatsApp<span>Conduz a conversa comercial</span></div>
+            <div class="funnel-arrow">↓</div>
+            <div class="funnel-step">CRM<span>Segmenta e gera recorrência</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-space" id="copy">
+      <div class="container cards-2">
+        <article class="card reveal">
+          <div class="section-head" style="margin-bottom: 18px;">
+            <div>
+              <div class="eyebrow">Linguagem e direção criativa</div>
+              <h2 style="font-size: clamp(1.8rem, 3vw, 2.8rem); max-width: 15ch;">A voz de uma agência estratégica</h2>
+            </div>
+          </div>
+
+          <ul>
+            <li>Design limpo, sofisticado e orientado à percepção de valor.</li>
+            <li>Linguagem estratégica, direta e segura, sem perder proximidade.</li>
+            <li>Estética moderna com autoridade, pensada para reforçar posicionamento.</li>
+            <li>Comunicação que traduz experiência de mercado em presença contemporânea.</li>
+          </ul>
+
+          <div class="quote-box">
+            <strong>Direção de marca</strong>
+            <p>
+              A Flow Create trabalha a comunicação como extensão da estratégia. Isso significa transformar experiência, reputação e potencial comercial em uma presença mais clara, atual e persuasiva — sem artificialidade e sem excesso.
+            </p>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <div class="section-head" style="margin-bottom: 18px;">
+            <div>
+              <div class="eyebrow">Copy estratégica</div>
+              <h2 style="font-size: clamp(1.8rem, 3vw, 2.8rem); max-width: 14ch;">A lógica de uma comunicação que conduz</h2>
+            </div>
+          </div>
+
+          <div class="copy-layers">
+            <div class="copy-step">
+              <div class="n">1</div>
+              <h3>Atrair pela tensão real</h3>
+              <p>“Você ainda compra peças sem saber se está pagando caro?”</p>
+            </div>
+            <div class="copy-step">
+              <div class="n">2</div>
+              <h3>Consolidar confiança</h3>
+              <p>“Há 30 anos ajudando clientes a escolher com segurança.”</p>
+            </div>
+            <div class="copy-step">
+              <div class="n">3</div>
+              <h3>Conduzir para movimento</h3>
+              <p>“Comenta INFO que te enviamos as melhores opções.”</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-space" id="metricas">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <div class="eyebrow">Métricas de sucesso</div>
+            <h2>Os primeiros 90 dias precisam validar a máquina</h2>
+          </div>
+          <p>
+            O objetivo inicial não é sofisticar tudo ao extremo. É provar que a estrutura capta melhor, qualifica melhor e converte melhor.
+            Esses indicadores mostram se a operação está ganhando força real.
+          </p>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi reveal" data-progress="84">
+            <small>Captação</small>
+            <strong>Leads</strong>
+            <p>Comentários com intenção, directs iniciados e volume de entrada vindo do Instagram.</p>
+            <div class="bar"><span></span></div>
+          </div>
+
+          <div class="kpi reveal" data-progress="72">
+            <small>Qualificação</small>
+            <strong>Score</strong>
+            <p>Leads classificados automaticamente e enviados com mais contexto ao atendimento.</p>
+            <div class="bar"><span></span></div>
+          </div>
+
+          <div class="kpi reveal" data-progress="68">
+            <small>Conversão</small>
+            <strong>Vendas</strong>
+            <p>Taxa de atendimento, tempo médio de resposta, ticket médio e fechamento.</p>
+            <div class="bar"><span></span></div>
+          </div>
+
+          <div class="kpi reveal" data-progress="76">
+            <small>Relacionamento</small>
+            <strong>Recorrência</strong>
+            <p>Reativação de leads, recompra e desempenho por segmento comercial.</p>
+            <div class="bar"><span></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-space" id="plano">
+      <div class="container cards-2">
+        <article class="card reveal">
+          <div class="section-head" style="margin-bottom: 16px;">
+            <div>
+              <div class="eyebrow">Plano de execução</div>
+              <h2 style="font-size: clamp(1.8rem, 3vw, 2.8rem); max-width: 13ch;">Roadmap dos 90 dias</h2>
+            </div>
+          </div>
+
+          <div class="timeline">
+            <div class="timeline-item">
+              <strong>Dias 1–30</strong>
+              <div>
+                <h3>Base e estrutura</h3>
+                <p>Configurar a arquitetura, organizar fluxos, definir automações, mensagens de entrada, triagem inicial e lógica de segmentação.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <strong>Dias 31–60</strong>
+              <div>
+                <h3>Validação de captação</h3>
+                <p>Testar CTA, linguagem, volume de comentários e directs, qualidade da entrada e comportamento dos leads no atendimento.</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <strong>Dias 61–90</strong>
+              <div>
+                <h3>Otimização de conversão</h3>
+                <p>Ajustar classificação, follow-up, cadência comercial, segmentação e rotas de recorrência com base nos dados coletados.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <div class="section-head" style="margin-bottom: 16px;">
+            <div>
+              <div class="eyebrow">Visão final</div>
+              <h2 style="font-size: clamp(1.8rem, 3vw, 2.8rem); max-width: 14ch;">O desenho que essa operação cria</h2>
+            </div>
+          </div>
+
+          <div class="outcomes">
+            <div class="outcome-item">
+              <strong>Instagram atrai com intenção</strong>
+              <p>O conteúdo deixa de ser apenas presença e passa a agir como ponto de entrada comercial qualificado.</p>
+            </div>
+            <div class="outcome-item">
+              <strong>Automação organiza sem esfriar</strong>
+              <p>A resposta acontece com velocidade, mas sem perder direção, contexto e continuidade.</p>
+            </div>
+            <div class="outcome-item">
+              <strong>IA lê melhor o momento do lead</strong>
+              <p>A operação ganha leitura de intenção, priorização e uma condução comercial mais inteligente.</p>
+            </div>
+            <div class="outcome-item">
+              <strong>CRM sustenta recorrência</strong>
+              <p>Os contatos deixam de ficar soltos e passam a construir histórico, segmentação e oportunidades futuras.</p>
+            </div>
+          </div>
+
+          <div class="quote-box">
+            <strong>Resultado esperado</strong>
+            <p>
+              Uma máquina digital de captação, relacionamento e vendas previsíveis. Mais clareza para a operação,
+              mais velocidade para o comercial e mais inteligência para crescer sem depender de improviso.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-space" id="contato">
+      <div class="container">
+        <div class="cta reveal">
+          <div>
+            <div class="eyebrow">Flow Create • proposta estratégica</div>
+            <h2>Estruturar processos para que a empresa cresça com mais clareza e potência</h2>
+            <p>
+              A proposta da Flow Create é posicionar a empresa em um novo nível de operação: mais inteligente na entrada,
+              mais fluida no atendimento, mais organizada na gestão dos contatos e mais forte na conversão. Não se trata apenas de marketing.
+              Trata-se de construir fluxos que sustentem relacionamento, eficiência e crescimento com visão estratégica.
+            </p>
+          </div>
+
+          <div class="cta-box">
+            <ul>
+              <li>Diagnóstico da jornada comercial e dos pontos de atrito</li>
+              <li>Desenho de fluxos para otimizar processos internos e externos</li>
+              <li>Automação aplicada para acelerar resposta e reduzir ruído</li>
+              <li>Camada de inteligência para qualificação e priorização de leads</li>
+              <li>Estrutura comercial pensada para conversão e recorrência</li>
+              <li>Posicionamento digital com clareza, autoridade e direção</li>
+            </ul>
+            <div class="cta-actions">
+              <a href="#inicio" class="btn btn-primary">Voltar ao topo</a>
+              <a href="#arquitetura" class="btn btn-soft">Rever arquitetura</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <strong style="color: var(--text);">Flow Create</strong>
+        <p style="margin-top: 8px;">Flow Create cria fluxos que otimizam processos das empresas, conectando estratégia, automação e inteligência para gerar operações mais claras, eficientes e escaláveis.</p>
+      </div>
+      <div>
+        <p>Site criado em HTML, CSS e JavaScript puro.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const stages = [...document.querySelectorAll('.flow-stage')];
+    const flowStatus = document.getElementById('flowStatus');
+    const labels = [
+      'Entrada ativa',
+      'Triagem automática',
+      'Integração do funil',
+      'Inteligência de qualificação',
+      'Atendimento e fechamento',
+      'Segmentação e recorrência'
+    ];
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let stageIndex = 0;
+
+    if (!prefersReducedMotion && stages.length) {
+      setInterval(() => {
+        stages.forEach((stage, i) => stage.classList.toggle('active', i === stageIndex));
+        flowStatus.textContent = labels[stageIndex];
+        stageIndex = (stageIndex + 1) % stages.length;
+      }, 1800);
+    } else if (stages.length) {
+      stages.forEach(stage => stage.classList.add('active'));
+    }
+
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabPanels = document.querySelectorAll('.tab-panel');
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.tab;
+        tabButtons.forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        tabPanels.forEach(panel => panel.classList.remove('active'));
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        document.getElementById(target).classList.add('active');
+      });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          if (entry.target.classList.contains('kpi')) {
+            const value = entry.target.dataset.progress;
+            const bar = entry.target.querySelector('.bar span');
+            requestAnimationFrame(() => {
+              bar.style.width = value + '%';
+            });
+          }
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.14 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+
+    menuBtn.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    const sections = document.querySelectorAll('main section[id]');
+    const navAnchors = document.querySelectorAll('.nav-links a');
+
+    const setActiveLink = () => {
+      let currentId = '';
+      sections.forEach(section => {
+        const top = window.scrollY;
+        const offset = section.offsetTop - 130;
+        const height = section.offsetHeight;
+        if (top >= offset && top < offset + height) {
+          currentId = section.id;
+        }
+      });
+
+      navAnchors.forEach(link => {
+        link.classList.toggle('active-link', link.getAttribute('href') === `#${currentId}`);
+      });
+    };
+
+    setActiveLink();
+    window.addEventListener('scroll', setActiveLink, { passive: true });
+  </script>
+</body>
+</html>
